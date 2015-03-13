@@ -12,9 +12,6 @@ angular.module('app', [])
                 if (err) return console.error(err);
                 var streams = res.streams;
                 $scope.streams = streams;
-                streams.forEach(function (stream) {
-                    console.log("Name: %s, Viewers: %d", stream.channel.name, stream.viewers);
-                });
                 $scope.$apply();
             });
         });
