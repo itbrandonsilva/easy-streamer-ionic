@@ -1,15 +1,26 @@
 {
   "name": "easy-stream",
   "version": "1.0.0",
-  "description": "",
+  "description": "An easy way to enjoy twitch streams on Raspbian.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "Brandon Silva",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.10.2",
-    "express": "^4.11.1"
-  }
+    "body-parser": "^1.12.0",
+    "express": "^4.12.2",
+    "swig": "^1.4.2",
+    "twitch-sdk": "git+https://git@github.com/justintv/twitch-js-sdk"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itbrandonsilva/easy-streamer"
+  },
+  "bugs": {
+    "url": "https://github.com/itbrandonsilva/easy-streamer/issues"
+  },
+  "homepage": "https://github.com/itbrandonsilva/easy-streamer"
 }
