@@ -40,8 +40,6 @@ app.get("/shutdown", function (req, res) {
     res.send('shutdown');
     killPs(function (err) {
         if (err) return console.error;
-        console.log('process.exit(0)');
-        return process.exit(0);
     });
 });
 

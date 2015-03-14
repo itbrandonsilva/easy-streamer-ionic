@@ -13,9 +13,13 @@
 <body ng-app="app" ng-controller="AppController">
     <ion-header-bar class="bar-positive">
         <h1 class="title">easy-streamer</h1>
-        <!-- <a ng-click="shutdown()" href="">Shutdown</a> -->
     </ion-header-bar>
     <ion-content>
+        <div class="card">
+            <div ng-click="shutdown()" class="item item-divider item-text-wrap">
+                <h2 class="title">Shutdown</h2>
+            </div>
+        </div>
         <div class="card" ng-repeat="stream in streams" ng-click="setStream(stream.channel.name)">
             <div class="item item-divider item-text-wrap">
                 <h2 class="title">{{ stream.channel.status }} ({{ stream.channel.name }})</h2>
