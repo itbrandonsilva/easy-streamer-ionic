@@ -27,5 +27,18 @@ angular.module('app', [])
                 }
             );
         };
+
+        $scope.shutdown = function () {
+            console.log("shutdown()");
+            $http.get("/shutdown").then(
+                function () {
+
+                },
+                function () {
+
+                }
+
+            );
+        };
     })
 ;

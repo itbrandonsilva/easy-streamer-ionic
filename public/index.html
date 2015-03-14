@@ -6,6 +6,7 @@
     <script src="components/app.js"></script>
 </head>
 <body ng-app="app" ng-controller="AppController">
+    <a ng-click="shutdown()" href="">Shutdown</a>
     <ul>
         <li ng-repeat="stream in streams" ng-click="setStream(stream.channel.name)">
             <h2>{{ stream.channel.name }}</h2>
