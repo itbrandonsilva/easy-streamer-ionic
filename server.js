@@ -37,6 +37,7 @@ app.get("/components/app.js", function (req, res) {
 });
 
 app.get("/shutdown", function (req, res) {
+    res.send('shutdown');
     killPs(function (err) {
         if (err) return console.error;
         console.log('process.exit(0)');

@@ -1,4 +1,4 @@
-angular.module('app', [])
+angular.module('app', ['ionic'])
     .controller('AppController', function ($scope, $http) {
 
         $scope.streams = [];
@@ -12,6 +12,7 @@ angular.module('app', [])
                 if (err) return console.error(err);
                 var streams = res.streams;
                 $scope.streams = streams;
+                console.log(streams);
                 $scope.$apply();
             });
         });
