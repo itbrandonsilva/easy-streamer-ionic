@@ -40,7 +40,7 @@ function watchChannel(channelName, cb) {
             //    console.log("Error: ", err.message);
             //});
 
-            var cmdString = 'livestreamer twitch.tv/' + channelName + ' medium -np "omxplayer -o hdmi"'
+            var cmdString = 'livestreamer twitch.tv/' + channelName + ' ' + quality + ' -np "omxplayer -o hdmi"'
 
             console.log("Executing: " + cmdString);
             ps = spawn('/bin/sh', ['-c', cmdString]);
