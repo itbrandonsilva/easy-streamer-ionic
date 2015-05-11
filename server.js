@@ -30,6 +30,39 @@ function killPs(cb) {
     });
 }
 
+function watchChannel(channelName, cb) {
+     console.log("watchChannel()");
+     async.series([killPs],
+        function (err) {
+            if (err) return cb(err);
+            //ps = spawn(CMD, [url, "best", "--player", "vlc"]);
+            //ps.on("error", function (err) {
+            //    console.log("Error: ", err.message);
+            //});
+
+            var cmdString = 'livestreamer twitch.tv/' + channelName + ' medium -np "omxplayer -o hdmi"'
+
+            console.log("Executing: " + cmdString);
+            ps = spawn('/bin/sh', ['-c', cmdString]);
+
+            ps.stdout.on('data', function (data) {
+                process.stdout.write("PS: " + data.toString());
+            }); 
+            ps.stderr.on('data', function (data) {
+                process.stdout.write("PSERROR: " + data.toString());
+            }); 
+            ps.on('exit', function (code, signal) {
+                console.log('PS EXIT: ' + signal + '/' + signal);
+            }); 
+            ps.on('close', function (code, signal) {
+                console.log('PS CLOSE: ' + signal + '/' + signal);
+            }); 
+
+            return cb();
+        }   
+    );  
+}
+
 app.get("/components/app.js", function (req, res) {
     res.append('content-type', 'text/javascript');
     res.send(swig.renderFile("./public/components/app.js", {client_id: CONFIG.client_id}));
@@ -44,6 +77,7 @@ app.put("/stream/stop", function (req, res) {
 
 app.put("/stream/play/:name", function (req, res) {
     var channelName = req.params['name'];
+    watchChannel(channelName, function (err) { if (err) console.error(err); });
     res.send(channelName);
 
     console.log('-----------');
