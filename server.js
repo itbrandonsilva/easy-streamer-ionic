@@ -10,14 +10,13 @@ var swig = require("swig");
 var psTree = require('ps-tree');
 var async = require('async');
 
-
-
 var PORT = 3000;
 var CMD = "/usr/local/bin/livestreamer";
 var CONFIG = require("./config.json");
 
+var quality = "best";
+
 var app = express()
-// Not currently needed.
 app.use(bodyParser.json());
 
 var ps = null;
@@ -36,14 +35,14 @@ app.get("/components/app.js", function (req, res) {
     res.send(swig.renderFile("./public/components/app.js", {client_id: CONFIG.client_id}));
 });
 
-app.get("/shutdown", function (req, res) {
+app.put("/stream/stop", function (req, res) {
     res.send('shutdown');
     killPs(function (err) {
         if (err) return console.error;
     });
 });
 
-app.get("/stream/set/:name", function (req, res) {
+app.put("/stream/play/:name", function (req, res) {
     var channelName = req.params['name'];
     res.send(channelName);
 
@@ -53,13 +52,21 @@ app.get("/stream/set/:name", function (req, res) {
             if (err) return console.log(err);
             console.log("Spawning player...");
             var url = "twitch.tv/" + channelName;
-            ps = spawn(CMD, [url, "best", "-np", "omxplayer -o hdmi"]);
+            ps = spawn(CMD, [url, quality, "-np", "omxplayer -o hdmi"]);
             //ps = spawn(CMD, [url, "best", "--player", "vlc"]);
             ps.on("error", function (err) {
                 console.log("Error: ", err.message);
             });
         }
     );
+});
+
+app.put("/stream/quality/:quality", function (req, res) {
+    quality = req.params['quality'];
+});
+
+app.put("/stream/restart", function (req, res) {
+
 });
 
 app.use(express.static('public'));

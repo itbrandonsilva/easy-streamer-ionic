@@ -1,10 +1,16 @@
 angular.module('app', ['ionic'])
-    .controller('AppController', function ($scope, $http) {
+    .controller('AppController', function ($scope, $http, $ionicModal) {
 
         $scope.streams = [];
 
-        Twitch.init({clientId: '{{ client_id }}'}, function(err, status) {
-            if (err) return console.error(err);
+        $ionicModal.fromTemplateUrl('settings.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function (modal) {
+            $scope.modal = modal;
+        });
+
+        $scope.loadStreams = function () {
             Twitch.api({
                 method: 'streams',
                 params: {limit: 25} 
@@ -15,11 +21,15 @@ angular.module('app', ['ionic'])
                 console.log(streams);
                 $scope.$apply();
             });
+        };
+
+        Twitch.init({clientId: '{{ client_id }}'}, function(err, status) {
+            if (err) return console.error(err);
+            $scope.loadStreams();
         });
 
         $scope.setStream = function (channelName) {
-            console.log(channelName);
-            $http.get("/stream/set/" + channelName).then(
+            $http.put("/stream/play/" + channelName).then(
                 function (res) {
                     console.log(res);
                 },
@@ -30,16 +40,15 @@ angular.module('app', ['ionic'])
         };
 
         $scope.shutdown = function () {
-            console.log("shutdown()");
-            $http.get("/shutdown").then(
-                function () {
+            $http.put("/stream/stop");
+        };
 
-                },
-                function () {
+        $scope.restart = function () {
+            $http.put("/stream/restart");
+        };
 
-                }
-
-            );
+        $scope.showSettings = function () {
+            $scope.modal.show();
         };
     })
 ;

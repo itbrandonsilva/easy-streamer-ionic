@@ -9,27 +9,49 @@
     <script src="components/ionic/js/ionic.bundle.min.js"></script>
     <!-- <script src="components/angular/angular.min.js"></script> -->
     <script src="components/app.js"></script>
+    <style>
+        .tab-item, .tab-item.tab-item-active {
+            opacity: 0.65;
+        }
+    </style>
 </head>
 <body ng-app="app" ng-controller="AppController">
     <ion-header-bar class="bar-positive">
         <h1 class="title">easy-streamer</h1>
     </ion-header-bar>
     <ion-content>
-        <div class="card">
-            <div ng-click="shutdown()" class="item item-divider item-text-wrap">
-                <h2 class="title">Shutdown</h2>
-            </div>
-        </div>
         <div class="card" ng-repeat="stream in streams" ng-click="setStream(stream.channel.name)">
             <div class="item item-divider item-text-wrap">
-                <h2 class="title">{{ stream.channel.status }} ({{ stream.channel.name }})</h2>
+                <h2 class="title"><strong>{{ stream.channel.name }}</strong> (Viewers - {{ stream.viewers }})</br>{{ stream.channel.status }}  / {{ stream.channel.name }})</h2>
             </div>
             <div class="item item-body">
                 <div class="item item-image">
                     <img ng-src="{{ stream.preview.large }}">
                 </div>
             </div>
+            <div class="item tabs tabs-secondary tabs-icon-left">
+                <a class="tab-item" href="#">
+                    <i class="icon ion-eye"></i>Play
+                </a>
+            </div>
         </div>
     </ion-content>
+
+    <ion-tabs class="tabs-icon-top tabs-positive">
+        <ion-tab title="Refresh" ng-click="loadStreams()" icon="ion-loop"></ion-tab>
+        <ion-tab title="Settings" ng-click="showSettings()" icon="ion-gear-b"></ion-tab>
+        <ion-tab title="Stop" ng-click="shutdown()" icon="ion-stop"></ion-tab>
+    </ion-tabs>
+
+    <script id="settings.html" type="text/ng-template">
+        <ion-modal-view>
+            <ion-header-bar>
+                <h1 class="title">Settings</h1>
+            </ion-header-bar>
+            <ion-content>
+                Under construction...
+            </ion-content>
+        </ion-modal-view>
+    </script>
 </body>
 </html>
