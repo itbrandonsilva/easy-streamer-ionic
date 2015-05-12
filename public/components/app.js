@@ -1,15 +1,7 @@
 angular.module('app', ['ionic'])
-    .controller('AppController', function ($scope, $http, $ionicModal) {
+    .controller('AppController', function ($scope, $http, $ionicModal, $ionicPopup) {
 
         $scope.streams = [];
-
-        $ionicModal.fromTemplateUrl('settings.html', {
-            scope: $scope,
-            animation: 'slide-in-up'
-        }).then(function (modal) {
-            $scope.modal = modal;
-        });
-
         $scope.loadStreams = function () {
             Twitch.api({
                 method: 'streams',
@@ -34,7 +26,7 @@ angular.module('app', ['ionic'])
                     console.log(res);
                 },
                 function (err) {
-                    console.error(err);
+                    console.log(err);
                 }
             );
         };
@@ -47,8 +39,37 @@ angular.module('app', ['ionic'])
             $http.put("/stream/restart");
         };
 
-        $scope.showSettings = function () {
-            $scope.modal.show();
+        $scope.settings = {quality: "high"};
+        $http.get("/stream/settings").then(
+            function (res) {
+                $scope.settings.quality = res.data.quality;
+                console.log($scope.settings);
+            },
+            function (err) {
+                console.log(err);
+            }
+        );
+
+        $scope.qualityPopup = {
+            show: function () {
+                $ionicPopup.show({
+                    templateUrl: 'quality.html',
+                    title: 'Quality',
+                    scope: $scope,
+                    buttons: [{text: 'Save', type: 'button-positive', onTap: function (e) {
+                        $http.put('/stream/settings/set/quality/' + $scope.settings.quality).then(
+                            function (res) {
+                                console.log("SUSESS");
+                                this.close();
+                            },
+                            function (err) {
+                                console.log(err);
+                                this.close();
+                            }
+                        );
+                    }}]
+                });
+            }
         };
     })
 ;

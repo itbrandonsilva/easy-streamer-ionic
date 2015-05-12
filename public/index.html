@@ -13,10 +13,14 @@
         .tab-item, .tab-item.tab-item-active {
             opacity: 0.65;
         }
+
+        .item-select select {
+            padding: 14px 48px 10px 16px;
+        }
     </style>
 </head>
 <body ng-app="app" ng-controller="AppController">
-    <ion-header-bar class="bar-positive">
+    <ion-header-bar class="bar-royal">
         <h1 class="title">easy-streamer</h1>
     </ion-header-bar>
     <ion-content>
@@ -37,21 +41,37 @@
         </div>
     </ion-content>
 
-    <ion-tabs class="tabs-icon-top tabs-positive">
+    <ion-tabs class="tabs-icon-top tabs-royal">
         <ion-tab title="Refresh" ng-click="loadStreams()" icon="ion-loop"></ion-tab>
-        <ion-tab title="Settings" ng-click="showSettings()" icon="ion-gear-b"></ion-tab>
+        <ion-tab title="Settings" ng-click="qualityPopup.show()" icon="ion-gear-b"></ion-tab>
         <ion-tab title="Stop" ng-click="shutdown()" icon="ion-stop"></ion-tab>
     </ion-tabs>
 
-    <script id="settings.html" type="text/ng-template">
-        <ion-modal-view>
-            <ion-header-bar>
-                <h1 class="title">Settings</h1>
-            </ion-header-bar>
-            <ion-content>
-                Under construction...
-            </ion-content>
-        </ion-modal-view>
+    <script id="quality.html" type="text/ng-template">
+        <div class="list">
+            <label class="item item-radio">
+                <input type="radio" ng-model="settings.quality" value="low">
+                <div class="item-content">Low</div>
+                <i class="radio-icon ion-checkmark"></i>
+            </label>
+            <label class="item item-radio">
+                <input type="radio" ng-model="settings.quality" value="medium">
+                <div class="item-content">Medium</div>
+                <i class="radio-icon ion-checkmark"></i>
+            </label>
+            <label class="item item-radio">
+                <input type="radio" ng-model="settings.quality" value="high">
+                <div class="item-content">High</div>
+                <i class="radio-icon ion-checkmark"></i>
+            </label>
+            <label class="item item-radio">
+                <input type="radio" ng-model="settings.quality" value="best">
+                <div class="item-content">Best</div>
+                <i class="radio-icon ion-checkmark"></i>
+            </label>
+        </div>
+            {{ quality }}
     </script>
+
 </body>
 </html>

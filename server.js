@@ -17,6 +17,10 @@ var CONFIG = require("./config.json");
 var quality = "best";
 
 var app = express()
+
+app.set('view cache', false);
+swig.setDefaults({cache: false});
+
 app.use(bodyParser.json());
 
 var ps = null;
@@ -68,6 +72,10 @@ app.get("/components/app.js", function (req, res) {
     res.send(swig.renderFile("./public/components/app.js", {client_id: CONFIG.client_id}));
 });
 
+app.get("/stream/settings", function (req, res) {
+    res.json({quality: quality});
+});
+
 app.put("/stream/stop", function (req, res) {
     res.send('shutdown');
     killPs(function (err) {
@@ -95,8 +103,9 @@ app.put("/stream/play/:name", function (req, res) {
     );
 });
 
-app.put("/stream/quality/:quality", function (req, res) {
+app.put("/stream/settings/set/quality/:quality", function (req, res) {
     quality = req.params['quality'];
+    res.send("ok");
 });
 
 app.put("/stream/restart", function (req, res) {
