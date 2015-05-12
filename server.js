@@ -86,21 +86,6 @@ app.put("/stream/stop", function (req, res) {
 app.put("/stream/play/:name", function (req, res) {
     var channelName = req.params['name'];
     watchChannel(channelName, function (err) { if (err) console.error(err); });
-    res.send(channelName);
-
-    console.log('-----------');
-    async.series([killPs],
-        function (err) {
-            if (err) return console.log(err);
-            console.log("Spawning player...");
-            var url = "twitch.tv/" + channelName;
-            ps = spawn(CMD, [url, quality, "-np", "omxplayer -o hdmi"]);
-            //ps = spawn(CMD, [url, "best", "--player", "vlc"]);
-            ps.on("error", function (err) {
-                console.log("Error: ", err.message);
-            });
-        }
-    );
 });
 
 app.put("/stream/settings/set/quality/:quality", function (req, res) {
