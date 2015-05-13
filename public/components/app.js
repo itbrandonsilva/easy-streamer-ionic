@@ -1,5 +1,5 @@
 angular.module('app', ['ionic'])
-    app.filter('reverse', function() {
+    .filter('reverse', function() {
         return function (array) {
             return array.slice().reverse();
         };
