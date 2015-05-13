@@ -4,7 +4,7 @@ var child_process = require('child_process');
 var spawn = child_process.spawn;
 var spawnSync = child_process.spawnSync;
 
-var express = require("express")
+var express = require("express");
 var bodyParser = require("body-parser");
 var swig = require("swig");
 var psTree = require('ps-tree');
@@ -16,56 +16,14 @@ var CONFIG = require("./config.json");
 
 var quality = "best";
 
-var app = express()
-
+var app = express();
 app.set('view cache', false);
 swig.setDefaults({cache: false});
 
+var server = require('http').Server(app);
+var socketio = require('socket.io')(server);
+
 app.use(bodyParser.json());
-
-var ps = null;
-function killPs(cb) {
-    if ( !ps ) return cb();
-    psTree(ps.pid, function (err, children) {
-        if (err) return cb(err);
-        spawnSync('kill', ['-9'].concat(children.map(function (p) {return p.PID})));
-        console.log('Killed.');
-        return cb();
-    });
-}
-
-function watchChannel(channelName, cb) {
-     console.log("watchChannel()");
-     async.series([killPs],
-        function (err) {
-            if (err) return cb(err);
-            //ps = spawn(CMD, [url, "best", "--player", "vlc"]);
-            //ps.on("error", function (err) {
-            //    console.log("Error: ", err.message);
-            //});
-
-            var cmdString = 'livestreamer twitch.tv/' + channelName + ' ' + quality + ' -np "omxplayer -o hdmi"'
-
-            console.log("Executing: " + cmdString);
-            ps = spawn('/bin/sh', ['-c', cmdString]);
-
-            ps.stdout.on('data', function (data) {
-                process.stdout.write("PS: " + data.toString());
-            }); 
-            ps.stderr.on('data', function (data) {
-                process.stdout.write("PSERROR: " + data.toString());
-            }); 
-            ps.on('exit', function (code, signal) {
-                console.log('PS EXIT: ' + signal + '/' + signal);
-            }); 
-            ps.on('close', function (code, signal) {
-                console.log('PS CLOSE: ' + signal + '/' + signal);
-            }); 
-
-            return cb();
-        }   
-    );  
-}
 
 app.get("/components/app.js", function (req, res) {
     res.append('content-type', 'text/javascript');
@@ -99,8 +57,55 @@ app.put("/stream/restart", function (req, res) {
 
 app.use(express.static('public'));
 
-var server = app.listen(PORT, function () {
-    var host = server.address().address;
-    var port = server.address().port;
-    console.log('Example app listening at http://%s:%s', host, port)
+server.listen(PORT, function () {
+    log('');
+    log(new Date());
+    log('Listening on port ' + PORT)
 })
+
+function log(data) {
+    console.log(data);
+    socketio.emit('log', data);
+}
+
+var ps = null;
+function killPs(cb) {
+    if ( !ps ) return cb();
+    psTree(ps.pid, function (err, children) {
+        if (err) return cb(err);
+        spawnSync('kill', ['-9'].concat(children.map(function (p) {return p.PID})));
+        log('Killed.');
+        return cb();
+    });
+}
+
+function watchChannel(channelName, cb) {
+     log("watchChannel()");
+     async.series([killPs],
+        function (err) {
+            if (err) return cb(err);
+
+            var cmdString = 'livestreamer twitch.tv/' + channelName + ' ' + quality + ' -np "omxplayer -o hdmi"'
+
+            log("Executing: " + cmdString);
+            ps = spawn('/bin/sh', ['-c', cmdString]);
+
+            ps.stdout.on('data', function (data) {
+                data = data.slice(0, data.length-1);
+                log("PSOUT: " + data.toString());
+            }); 
+            ps.stderr.on('data', function (data) {
+                data = data.slice(0, data.length-1);
+                log("PSERR: " + data.toString());
+            }); 
+            ps.on('exit', function (code, signal) {
+                log('PS EXIT: ' + signal + '/' + signal);
+            }); 
+            ps.on('close', function (code, signal) {
+                log('PS CLOSE: ' + signal + '/' + signal);
+            }); 
+
+            return cb();
+        }   
+    );  
+}

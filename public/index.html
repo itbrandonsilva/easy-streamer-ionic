@@ -6,8 +6,8 @@
 
     <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
     <script src="components/twitch.min.js"></script>
+    <script src="components/socket.io.js"></script>
     <script src="components/ionic/js/ionic.bundle.min.js"></script>
-    <!-- <script src="components/angular/angular.min.js"></script> -->
     <script src="components/app.js"></script>
     <style>
         .tab-item, .tab-item.tab-item-active {
@@ -45,6 +45,7 @@
         <ion-tab title="Refresh" ng-click="loadStreams()" icon="ion-loop"></ion-tab>
         <ion-tab title="Settings" ng-click="qualityPopup.show()" icon="ion-gear-b"></ion-tab>
         <ion-tab title="Stop" ng-click="shutdown()" icon="ion-stop"></ion-tab>
+        <ion-tab title="Log" ng-click="logPopup.show()" icon="ion-ios-list"></ion-tab>
     </ion-tabs>
 
     <script id="quality.html" type="text/ng-template">
@@ -70,8 +71,12 @@
                 <i class="radio-icon ion-checkmark"></i>
             </label>
         </div>
-            {{ quality }}
     </script>
+
+    <script id="log.html" type="text/ng-template">
+        <div ng-repeat="entry in log | limitTo:-15 track by $index">{{ entry }}</div>
+    </script>
+
 
 </body>
 </html>

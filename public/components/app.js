@@ -20,6 +20,13 @@ angular.module('app', ['ionic'])
             $scope.loadStreams();
         });
 
+        $scope.log = [];
+        var socket = io.connect(location.origin);
+        socket.on('log', function (data) {
+            $scope.log.push(data);
+            $scope.$apply();
+        });
+
         $scope.setStream = function (channelName) {
             $http.put("/stream/play/" + channelName).then(
                 function (res) {
@@ -57,19 +64,30 @@ angular.module('app', ['ionic'])
                     title: 'Quality',
                     scope: $scope,
                     buttons: [{text: 'Save', type: 'button-positive', onTap: function (e) {
+                        this.close();
                         $http.put('/stream/settings/set/quality/' + $scope.settings.quality).then(
-                            function (res) {
-                                console.log("SUSESS");
-                                this.close();
-                            },
+                            function () {},
                             function (err) {
                                 console.log(err);
-                                this.close();
                             }
                         );
                     }}]
                 });
             }
         };
+
+        $scope.logPopup = {
+            show: function () {
+                $ionicPopup.show({
+                    templateUrl: 'log.html',
+                    title: 'Console Output',
+                    scope: $scope,
+                    buttons: [{text: 'Close', type: 'button-positive', onTap: function (e) {
+                        this.close();
+                    }}]
+                });
+            }
+        };
+
     })
 ;
