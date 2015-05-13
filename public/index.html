@@ -26,7 +26,10 @@
     <ion-content>
         <div class="card" ng-repeat="stream in streams" ng-click="setStream(stream.channel.name)">
             <div class="item item-divider item-text-wrap">
-                <h2 class="title"><strong>{{ stream.channel.name }}</strong> (Viewers - {{ stream.viewers }})</br>{{ stream.channel.status }}  / {{ stream.channel.name }})</h2>
+                <h2 class="title">
+                    <strong>{{ stream.channel.name }}</strong><span style="font-style: italic"> - {{ stream.channel.game }}</span> (Viewers - {{ stream.viewers }})</em></br>
+                    {{ stream.channel.status }}
+                </h2>
             </div>
             <div class="item item-body">
                 <div class="item item-image">
