@@ -1,4 +1,9 @@
 angular.module('app', ['ionic'])
+    app.filter('reverse', function() {
+        return function (array) {
+            return array.slice().reverse();
+        };
+    })
     .controller('AppController', function ($scope, $http, $ionicModal, $ionicPopup) {
 
         $scope.streams = [];
@@ -24,6 +29,7 @@ angular.module('app', ['ionic'])
         var socket = io.connect(location.origin);
         socket.on('log', function (data) {
             $scope.log.push(data);
+            if ($scope.log.length > 15) $scope.log.splice(0, 1);
             $scope.$apply();
         });
 

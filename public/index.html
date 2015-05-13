@@ -74,7 +74,7 @@
     </script>
 
     <script id="log.html" type="text/ng-template">
-        <div ng-repeat="entry in log | limitTo:-15 track by $index">{{ entry }}</div>
+        <div ng-repeat="entry in log | limitTo:-15 | reverse track by $index">{{ entry }}</div>
     </script>
 
 
